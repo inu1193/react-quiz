@@ -4,16 +4,19 @@ import Question from './Question';
 import Summary from './Summary';
 
 const Quiz = () => {
+  const [quizStarted, setQuizStarted] = useState(false);
   const [userAnswers, setUserAnswers] = useState([]);
 
-  const activeQuestionIndex =userAnswers.length;
+  const activeQuestionIndex = userAnswers.length;
   const quizIsComplete = activeQuestionIndex === QUESTIONS.length;
 
+  const handleStartQuiz = () => {
+    setQuizStarted(true);
+  };
+
   const handleSelectAnswer = useCallback(
-    function handleSelectAnswer(selectedAnswer) {
-      setUserAnswers((prevUserAnswers) => {
-        return [...prevUserAnswers, selectedAnswer];
-      });
+    (selectedAnswer) => {
+      setUserAnswers((prevUserAnswers) => [...prevUserAnswers, selectedAnswer]);
     },
     []
   );
@@ -22,8 +25,18 @@ const Quiz = () => {
     handleSelectAnswer,
   ]);
 
+  if (!quizStarted) {
+    return (
+      <div id="welcome-screen">
+        <h1>Welcome to the Quiz!</h1>
+        <p>Test your knowledge and have fun!</p>
+        <button onClick={handleStartQuiz}>Start Quiz</button>
+      </div>
+    );
+  }
+
   if (quizIsComplete) {
-    return <Summary userAnswers={userAnswers}    />;
+    return <Summary userAnswers={userAnswers} />;
   }
 
   return (
